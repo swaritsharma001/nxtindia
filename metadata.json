@@ -1,0 +1,6 @@
+{
+  "name": "NXTBOT",
+  "description": "A modern, futuristic, cyberpunk-style dashboard for managing and hosting Discord bots.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
