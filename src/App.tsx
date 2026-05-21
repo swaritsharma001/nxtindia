@@ -21,21 +21,75 @@ import Footer from './components/Footer';
 import ConsoleLogPanel from './components/ConsoleLogPanel';
 import { Sparkles, Terminal, Info, Zap, AlertTriangle, ShieldCheck, Heart } from 'lucide-react';
 import { PricingTab } from './components/PricingTab';
+import cookie from "js-cookie"
+import axios from "axios"
+import { useDispatch } from "react-redux";
+
+import { seetUser } from "../redux/userSlice";
+
+
 
 export default function App() {
+  const dispatch = useDispatch();
   // Authentication & Profile States
   const [user, setUser] = useState<{ username: string; avatarUrl: string } | null>(null);
   const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard');
+  const [activeTab, setActiveTab] = useState<ActiveTab>('dashboard')
 
+  useEffect(() => {
+
+  const params = new URLSearchParams(window.location.search);
+
+  const token = params.get("token");
+
+  if (token) {
+
+    
+
+    // Save cookie
+    cookie.set("token", token, {
+      expires: 30,
+      path: "/"
+    });
+
+    
+  }
+
+}, []);
+
+  useEffect(() => {
+    const token = cookie.get("token");
+
+    if (!token) return;
+
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(
+          "https://5dfe6ee9-e7c3-42ac-8969-a375eaf6f061-00-3t8s8w7v3ehcc.worf.replit.dev:3000/auth/user",
+          {
+            headers: {
+              Authorization: token,
+            },
+          }
+        );
+
+        dispatch(seetUser(res.data)); // ✅ FIXED TYPO
+      } catch (err) {
+        console.error("User fetch failed:", err);
+      }
+    };
+
+    fetchUser();
+  }, [dispatch]);
+  
   // Premium System & Dynamic White-labeling
   const [premiumStatus, setPremiumStatus] = useState<'free' | 'pending' | 'premium'>(() => {
     return (localStorage.getItem('premium_status') as 'free' | 'pending' | 'premium') || 'free';
   });
+
   const [brandingRemoved, setBrandingRemoved] = useState(() => {
     return localStorage.getItem('branding_removed') === 'true';
   });
-  const isPremium = premiumStatus === 'premium';
 
   // Toasts
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
@@ -598,4 +652,4 @@ export default function App() {
       </div>
     </div>
   );
-}
+  }

@@ -1,6 +1,7 @@
 import { motion, AnimatePresence } from 'motion/react';
 import { Shield, Sparkles, Check, Info, Bot, User, HelpCircle } from 'lucide-react';
 import { LogoIcon } from './Logo';
+import cookie from "js-cookie"
 
 interface DiscordLoginModalProps {
   isOpen: boolean;
@@ -122,20 +123,26 @@ export default function DiscordLoginModal({ isOpen, onClose, onAuthorize }: Disc
             <div className="flex flex-col sm:flex-row gap-2.5 justify-end">
               <button
                 type="button"
-                id="cancel-discord-auth-btn"
-                onClick={onClose}
-                className="order-2 sm:order-1 px-5 py-2.5 text-xs font-semibold rounded bg-transparent hover:underline text-slate-300 hover:text-white transition duration-150"
-              >
-                Cancel
-              </button>
-              <button
-                type="button"
                 id="authorize-discord-auth-btn"
-                onClick={handleAuthorizeClick}
                 className="order-1 sm:order-2 flex items-center justify-center gap-2 px-6 py-2.5 text-xs font-bold rounded bg-[#5865F2] hover:bg-[#4752C4] active:bg-[#3C45A5] text-white shadow-lg shadow-blue-600/10 hover:shadow-blue-600/25 transition duration-150"
+                onClick={() => {
+
+                  if (cookie.get("token")) {
+
+                    cookie.remove("token");
+                    window.location.reload();
+
+                  } else {
+
+                    window.location.href =
+                      "https://5dfe6ee9-e7c3-42ac-8969-a375eaf6f061-00-3t8s8w7v3ehcc.worf.replit.dev:3000/auth/login";
+                  }
+                }}
               >
                 <HelpCircle className="w-4 h-4 hidden sm:block" />
-                Authorize & Continue
+
+                {cookie.get("token") ? "Logout" : "Authorize & Continue"}
+
               </button>
             </div>
           </div>

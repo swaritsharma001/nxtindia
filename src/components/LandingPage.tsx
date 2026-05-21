@@ -1,6 +1,7 @@
 import { motion } from 'motion/react';
 import { Bot, Terminal, ShieldAlert, Cpu, Orbit, Sparkles, Heart } from 'lucide-react';
 import { LogoIcon, LogoText, FullStackedLogo } from './Logo';
+import cookie from "js-cookie"
 
 interface LandingPageProps {
   onLoginClick: () => void;
@@ -136,7 +137,7 @@ export default function LandingPage({ onLoginClick }: LandingPageProps) {
 
             <span className="relative z-10 flex items-center gap-3">
               <Bot className="w-5 h-5 filter drop-shadow-[0_1px_2px_rgba(0,0,0,0.4)]" />
-              <span>Login with Discord</span>
+              {cookie.get("token") ? <a href='/logout'> Logout </a> : <span>Login with Discord</span>}
             </span>
           </button>
           
